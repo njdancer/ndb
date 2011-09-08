@@ -1,0 +1,22 @@
+#!/bin/node
+var repl = require('repl');
+
+var Model = require('../lib/Model');
+
+var Post = new Model('/Users/dancer/.ndb/data/Posts');
+
+repl = repl.start();
+repl.context.Post = Post;
+repl.context.debug = function() {
+  post = Post.create();
+  post.title = 'test';
+  post.save();
+  
+  console.log(Post.find(post.id));
+  
+  console.log(Post.destroy(post.id));
+  
+  console.log(post.id);
+  
+  console.log(Post.find(post.id));
+};
