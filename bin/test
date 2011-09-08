@@ -10,13 +10,20 @@ repl.context.Post = Post;
 repl.context.debug = function() {
   post = Post.create();
   post.title = 'test';
-  post.save();
-  
-  console.log(Post.find(post.id));
-  
-  console.log(Post.destroy(post.id));
-  
-  console.log(post.id);
-  
-  console.log(Post.find(post.id));
+  post.save(function() {
+    Post.find(post.id, function(data) {
+      console.log(data);
+      // Post.destroy(post.id, function() {
+      //   console.log(post.id);
+      //   try {
+      //     Post.find(post.id, function(data) {
+      //       console.log(data);
+      //     });
+      //   }
+      //   catch(e) {
+      //     console.log(e);
+      //   }
+      // });
+    });
+  });
 };
