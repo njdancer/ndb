@@ -11,19 +11,13 @@ repl.context.debug = function() {
   post = Post.create();
   post.title = 'test';
   post.save(function() {
-    Post.find(post.id, function(data) {
+    Post.find(post.key, function(data) {
       console.log(data);
-      // Post.destroy(post.id, function() {
-      //   console.log(post.id);
-      //   try {
-      //     Post.find(post.id, function(data) {
-      //       console.log(data);
-      //     });
-      //   }
-      //   catch(e) {
-      //     console.log(e);
-      //   }
-      // });
+      Post.destroy(post.key, function() {
+        Post.find(post.key, function(data) {
+          console.log(data);
+        });
+      });
     });
   });
 };
