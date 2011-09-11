@@ -21,3 +21,11 @@ repl.context.debug = function() {
     });
   });
 };
+
+repl.context.map = function() {
+  Post.map(function(data) {data.title = 'test';}, function(results) { console.log(results); });
+};
+
+repl.context.filter = function() {
+  Post.filter(function(data) { return data.title == 'test'; }, function(results) { console.log(results); });
+};
