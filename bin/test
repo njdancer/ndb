@@ -2,6 +2,7 @@
 var repl = require('repl');
 
 var Model = require('../lib/Model');
+var Node = require('../lib/Node');
 
 var Post = new Model('/Users/dancer/.ndb/data/Posts');
 
@@ -28,4 +29,14 @@ repl.context.map = function() {
 
 repl.context.filter = function() {
   Post.filter(function(data) { return data.title == 'test'; }, function(results) { console.log(results); });
+};
+
+repl.context.node0 = function() {
+  return new Node({port: 8000});
+};
+
+repl.context.node1 = function() {
+  var node = new Node({port: 8001});
+  node.connect('127.0.0.1', 8000);
+  return node;
 };
