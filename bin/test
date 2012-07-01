@@ -1,4 +1,4 @@
-#!/bin/node
+#!/usr/bin/env node
 var repl = require('repl');
 
 var Model = require('../lib/Model');
@@ -6,16 +6,17 @@ var Node = require('../lib/Node');
 
 var Post = new Model('/Users/dancer/.ndb/data/Posts');
 
-repl = repl.start();
+repl = repl.start("node> ");
 repl.context.Post = Post;
 repl.context.debug = function() {
   post = Post.create();
   post.title = 'test';
   post.save(function() {
-    Post.find(post.key, function(data) {
+    Post.get(post.key, function(data) {
       console.log(data);
       Post.destroy(post.key, function() {
-        Post.find(post.key, function(data) {
+        console.log('Record destroyed');
+        Post.get(post.key, function(data) {
           console.log(data);
         });
       });
