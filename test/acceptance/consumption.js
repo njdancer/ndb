@@ -3,9 +3,14 @@ var should = require('should');
 
 var Model = require('lib/Model');
 
-var Post = new Model(process.env['NODE_PATH'] + '/tmp/data/posts');
+var Post;
 
 describe('Consumption Interface', function() {
+  before(function(done) {
+    Post = new Model(process.env['NODE_PATH'] + '/tmp/data/posts');
+    Post.loadAll(done);
+  });
+  
   describe('definition', function() {
     before(function() {
       try {
@@ -43,12 +48,12 @@ describe('Consumption Interface', function() {
       post.title = "Hello World!";
       post.description = "Lorem Ipsum...";
       
-      post.save();
-      
-      Post.get(post.key, function(data) {
-        data.title.should.equal(post.title);
-        data.description.should.equal(post.description);
-        done();
+      post.save(function() {
+        Post.get(post.key, function(data) {
+          data.title.should.equal(post.title);
+          data.description.should.equal(post.description);
+          done();
+        });
       });
     });
   });
@@ -57,15 +62,15 @@ describe('Consumption Interface', function() {
     it("should no longer be accessible once removed from bucket", function(done) {
       var post = Post.create();
       
-      post.save();
-      
-      Post.get(post.key, function(data) {
-        should.exist(data);
-        post.remove(function() {
-          Post.get(post.key, function(data) {
-            // console.log(data.key);
-            // should.not.exist(data);
-            done();
+      post.save(function() {
+        Post.get(post.key, function(data) {
+          should.exist(data);
+          post.remove(function() {
+            Post.get(post.key, function(data) {
+              // console.log(data.key);
+              // should.not.exist(data);
+              done();
+            });
           });
         });
       });
