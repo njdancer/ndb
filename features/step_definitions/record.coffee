@@ -11,8 +11,3 @@ module.exports = recordSteps = () ->
 
   @When /^I save that record$/, (callback) ->
     @record.save callback
-
-  @Then /^I should be able to retrive that record$/, (callback) ->
-    @bucket.get @record.key, (data) =>
-      data.should.eql @record
-      callback()

@@ -7,4 +7,4 @@ Feature: Consistent API for accessing and storing data
 		Given a bucket exists
 		When I create a record with data
 		And I save that record
-		Then I should be able to retrive that record
+		Then I should be able to retrieve that record from its bucket
