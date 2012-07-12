@@ -8,3 +8,6 @@ module.exports = class Record
     Object.defineProperty this, 'key', value: args.key or uuid()
 
     extend args.data, this
+
+Object.defineProperty Record.prototype, 'save', value: (callback) ->
+  @_bucket.update @key, this, callback
