@@ -1,43 +1,16 @@
-#!/usr/bin/env node
-var repl = require('repl');
+#!/usr/bin/env coffee
+path = require 'path'
+spawn = require('child_process').spawn
 
-var Model = require('../lib/Model');
-var Node = require('../lib/Node');
+global.__projname = path.normalize __dirname + '/..'
+console.log 'Project path: ' + __projname
 
-var Post = new Model('/Users/dancer/.ndb/data/Posts');
+mocha = spawn 'mocha', ['--compilers', 
+                        'coffee:coffee-script', 
+                        '--require', 
+                        'should', 
+                        'test/unit/*.coffee'],
+                        cwd: __projname,
+                        env: process.env,
+                        stdio: 'inherit'
 
-repl = repl.start("node> ");
-repl.context.Post = Post;
-repl.context.debug = function() {
-  post = Post.create();
-  post.title = 'test';
-  post.save(function() {
-    Post.get(post.key, function(data) {
-      console.log(data);
-      Post.destroy(post.key, function() {
-        console.log('Record destroyed');
-        Post.get(post.key, function(data) {
-          console.log(data);
-        });
-      });
-    });
-  });
-};
-
-repl.context.map = function() {
-  Post.map(function(data) {data.title = 'test';}, function(results) { console.log(results); });
-};
-
-repl.context.filter = function() {
-  Post.filter(function(data) { return data.title == 'test'; }, function(results) { console.log(results); });
-};
-
-repl.context.node0 = function() {
-  return new Node({port: 8000});
-};
-
-repl.context.node1 = function() {
-  var node = new Node({port: 8001});
-  node.connect('127.0.0.1', 8000);
-  return node;
-};
