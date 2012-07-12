@@ -1,2 +1,6 @@
 { "name":"ndb",
-  "version":"0.0.1"}
+  "version":"0.0.1",
+  "scripts": {
+    "test": "NODE_PATH=/Users/dancer/Code/ndb cucumber.js features/data_access.feature || NODE_PATH=/Users/dancer/Code/ndb mocha --compilers coffee:coffee-script --require should test/unit/*.coffee"
+  }
+}

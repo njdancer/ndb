@@ -1,16 +1,2 @@
-#!/usr/bin/env coffee
-path = require 'path'
-spawn = require('child_process').spawn
-
-global.__projname = path.normalize __dirname + '/..'
-console.log 'Project path: ' + __projname
-
-mocha = spawn 'mocha', ['--compilers', 
-                        'coffee:coffee-script', 
-                        '--require', 
-                        'should', 
-                        'test/unit/*.coffee'],
-                        cwd: __projname,
-                        env: process.env,
-                        stdio: 'inherit'
-
+#/bin/sh
+npm test
