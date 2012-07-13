@@ -11,3 +11,12 @@ module.exports = recordSteps = () ->
 
   @When /^I save that record$/, (callback) ->
     @record.save callback
+
+  @Given /^a record exists$/, (callback) ->
+    # TODO: call Given a bucket exists to ensure fresh bucket is available
+    @record = @bucket.create()
+    @record.title = "Hello World"
+    @record.save callback
+
+  @When /^I remove that record$/, (callback) ->
+    @record.remove callback

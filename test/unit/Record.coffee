@@ -7,8 +7,12 @@ record = null
 
 describe 'Record', () ->
   before () ->
-    bucket = update: sinon.stub()
+    bucket = 
+      update: sinon.stub()
+      delete: sinon.spy()
+
     bucket.update.callsArg 2
+
     record = new Record bucket: bucket
 
   describe 'instantiation', () ->
@@ -40,3 +44,8 @@ describe 'Record', () ->
         bucket.update.calledWith(record.key, record).should.equal true
         bucket.update.calledOnce.should.equal true
         done()
+
+  describe 'remove', () ->
+    it 'should remove record from bucket', () ->
+      record.remove () ->
+        bucket.delete.calledOnce.should.equal true

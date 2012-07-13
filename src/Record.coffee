@@ -11,3 +11,6 @@ module.exports = class Record
 
 Object.defineProperty Record.prototype, 'save', value: (callback) ->
   @_bucket.update @key, this, callback
+
+Object.defineProperty Record.prototype, 'remove', value: (callback) ->
+  @_bucket.delete @key, callback
