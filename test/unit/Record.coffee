@@ -1,4 +1,4 @@
-Record = require 'src/Record'
+Record = require '../../lib/Record'
 uuid = require('node-uuid').v4
 sinon = require 'sinon'
 

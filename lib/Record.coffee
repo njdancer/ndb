@@ -1,5 +1,5 @@
 uuid = require 'node-uuid'
-extend = require('lib/Utilities').extend
+extend = require('./Utilities').extend
 
 module.exports = class Record
   constructor: (args) ->

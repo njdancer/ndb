@@ -1,5 +1,5 @@
-Bucket = require 'src/Bucket'
-Record = require 'src/Record'
+Bucket = require '../../lib/Bucket'
+Record = require '../../lib/Record'
 uuid = require('node-uuid').v4
 should = require 'should'
 

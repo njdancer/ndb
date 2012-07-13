@@ -1,4 +1,4 @@
-Bucket = require 'src/Bucket'
+Bucket = require '../../lib/Bucket'
 should = require 'should'
 
 module.exports = bucketSteps = () ->

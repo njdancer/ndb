@@ -1,4 +1,4 @@
-Record = require 'src/Record'
+Record = require './Record'
 
 module.exports = class Bucket
   constructor: () ->
