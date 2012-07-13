@@ -1,6 +1,38 @@
-{ "name":"ndb",
-  "version":"0.0.1",
-  "scripts": {
-    "test": "NODE_PATH=/Users/dancer/Code/ndb cucumber.js features/data_access.feature || NODE_PATH=/Users/dancer/Code/ndb mocha --compilers coffee:coffee-script --require should test/unit/*.coffee"
+{
+  "name" : "ndb",
+  "preferGlobal" : "false",
+  "version" : "0.0.9",
+  "author" : "Nick Dancer <nick@dancr.me>",
+  "description" : "An in process key/value data store",
+  "scripts" : {
+    "build" : "coffee -c lib/",
+    "clean" : "rm lib/*.js",
+    "postinstall": "npm run build",
+    "test" : "npm run-script acceptance || npm run-script unit",
+    "unit" : "mocha --compilers coffee:coffee-script --require should test/unit/*.coffee",
+    "acceptance" : "cucumber.js features/data_access.feature"
+  },
+  "main" : "index",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/njdancer/ndb.git"
+  },
+  "keywords": [
+    "database",
+    "db"
+  ],
+  "dependencies" : {
+    "coffee-script" : "1.3.x",
+    "node-uuid" :  "1.3.x"
+  },
+  "devDependencies" : {
+    "mocha" : "1.3.x",
+    "cucumber.js" : "0.2.x",
+    "should" :  "0.6.x",
+    "sinon"    :  "1.4.x"
+  },
+  "license" : "MIT",
+  "engine" : {
+    "node" : ">=0.8.1"
   }
 }
