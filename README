@@ -1,2 +1,4 @@
 Distributed Node Database
 NDB is not a database
+
+App should be able to start as a single persistent node where file storage is used to persist between sessions and scale up with extra nodes peering, or start in decentralized mode and all nodes persist to s3.
