@@ -61,18 +61,25 @@ describe 'Bucket', () ->
         record.should.have.property 'title', 'some more data'
 
       describe 'record not in internal store', () ->
-        it 'should retrieve data from FileStore', (done) ->
-          key = uuid()
-          data = title: "Hello World"
-          bucket.fileStore.persist key, data, () ->
-            bucket.get key, (_data) ->
-              data.should.eql _data
+        before (done) ->
+          @key = uuid()
+          @data = title: "Hello World"
+          bucket.fileStore.persist @key, @data, =>
+            bucket.get @key, (record) =>
+              @record = record
               done()
+
+        it 'should retrieve data from FileStore', () ->
+          @record.should.eql @data
+
+        it 'should return an instance of Record', () ->
+          @record.should.be.an.instanceOf Record
 
       it 'should return an instance of Record', () ->
         record.should.be.an.instanceOf Record
 
     describe 'key does not exist', () ->
+      # TODO: change this to undefined
       it 'should receive null passed to its callback', (done) ->
         bucket.get uuid(), (data) ->
           should.not.exist data

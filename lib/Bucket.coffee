@@ -18,12 +18,18 @@ module.exports = class Bucket
     callback()
 
   get: (key, callback) ->
-    if @identityMap[key]
+    record = (data) =>
       callback new Record bucket: this, key: key, data: @identityMap[key]
+    if @identityMap[key]
+      record @identityMap[key]
     else
       @fileStore.retrieve key, (data) =>
-        @identityMap[key] = data
-        callback data
+        if data is null
+          callback null
+        else
+          @identityMap[key] = data
+          record data
+
 
   delete: (key, callback) ->
     @fileStore.delete key, =>
