@@ -1,17 +1,26 @@
+path = require 'path'
 Bucket = require '../../lib/Bucket'
+# TODO: should be removed to help guarantee isolation during unit tests.
 Record = require '../../lib/Record'
+FileStore = require '../../lib/FileStore'
 uuid = require('node-uuid').v4
 should = require 'should'
+sinon = require 'sinon'
 
-bucket = null
 
 describe 'Bucket', () ->
+  bucket = null
+  dataPath = 'tmp/data/bucket'
   before () ->
-    bucket = new Bucket process.env['NODE_PATH'] + '/tmp/data/users'
+    bucket = new Bucket dataPath
 
   describe 'instantiation', () ->
-    it 'should accept a path and return a new Bucket', () ->
+    it 'should return an instance of Bucket', () ->
       bucket.should.be.an.instanceOf Bucket
+    it 'should accept a path and create a FileStore', () ->
+      bucket.fileStore.should.exist
+      bucket.fileStore.should.be.an.instanceOf FileStore
+      bucket.fileStore.dataPath.should.equal path.resolve(dataPath)
 
   describe 'create', () ->
     it 'should return an instance of Record', () ->
@@ -21,11 +30,20 @@ describe 'Bucket', () ->
         record._bucket.should.equal bucket
 
   describe 'update', () ->
-    it 'should persist data to internal store', (done) ->
+    key = null
+    before (done) ->
       key = uuid()
-      bucket.update key, title: 'data', () ->
-        bucket.identityMap[key].should.have.property 'title', 'data'
-        done()
+      sinon.spy bucket.fileStore, 'persist'
+      bucket.update key, title: 'data', done
+
+    it 'should persist data to internal store', () ->
+      bucket.identityMap[key].should.have.property 'title', 'data'
+      
+    it 'should persist data to FileStore', () ->
+      bucket.fileStore.persist.called.should.be.true
+
+    after () ->
+      bucket.fileStore.persist.restore()
 
   describe 'get', () ->
     describe 'key exists', () ->

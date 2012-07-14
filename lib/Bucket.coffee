@@ -1,13 +1,18 @@
 Record = require './Record'
+FileStore = require './FileStore'
 
 module.exports = class Bucket
-  constructor: () ->
+  constructor: (dataPath) ->
     @identityMap = {}
+    @fileStore = new FileStore dataPath
 
   create: () ->
     new Record bucket: this
 
   update: (key, data, callback) ->
+    # fire this off asynchronously with no callback
+    # TODO: pass in callback as form of exception handler
+    @fileStore.persist key, data
     @identityMap[key] = data
     callback()
 

@@ -6,12 +6,17 @@ module.exports = bucketSteps = () ->
     @bucket = new Bucket()
     callback()
 
-  @Then /^I should be able to retrieve that record from its bucket$/, (callback) ->
+  @Then /^I should be able to retrieve that record from the bucket$/, (callback) ->
     @bucket.get @record.key, (data) =>
+      should.exist data
       data.should.eql @record
       callback()
 
-  @Then /^I should not be able to retrieve that record from its bucket$/, (callback) ->
+  @Then /^I should not be able to retrieve that record from the bucket$/, (callback) ->
     @bucket.get @record.key, (data) ->
       should.not.exist data
       callback()
+
+  @When /^I create a bucket$/, (callback) ->
+    @bucket = new Bucket()
+    callback()
