@@ -3,6 +3,7 @@ FileStore = require './FileStore'
 
 module.exports = class Bucket
   constructor: (dataPath) ->
+    throw 'dataPath is required' unless dataPath
     @identityMap = {}
     @fileStore = new FileStore dataPath
 
@@ -20,7 +21,9 @@ module.exports = class Bucket
     if @identityMap[key]
       callback new Record bucket: this, key: key, data: @identityMap[key]
     else
-      callback null
+      @fileStore.retrieve key, (data) =>
+        @identityMap[key] = data
+        callback data
 
   delete: (key, callback) ->
     @identityMap[key] = undefined

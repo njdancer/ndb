@@ -3,7 +3,7 @@ should = require 'should'
 
 module.exports = bucketSteps = () ->
   @Given /^a bucket exists$/, (callback) ->
-    @bucket = new Bucket()
+    @bucket = new Bucket 'tmp/data/bucket'
     callback()
 
   @Then /^I should be able to retrieve that record from the bucket$/, (callback) ->
@@ -18,5 +18,5 @@ module.exports = bucketSteps = () ->
       callback()
 
   @When /^I create a bucket$/, (callback) ->
-    @bucket = new Bucket()
+    @bucket = new Bucket 'tmp/data/bucket'
     callback()

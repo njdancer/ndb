@@ -17,10 +17,13 @@ describe 'Bucket', () ->
   describe 'instantiation', () ->
     it 'should return an instance of Bucket', () ->
       bucket.should.be.an.instanceOf Bucket
-    it 'should accept a path and create a FileStore', () ->
+    it 'should create a FileStore', () ->
       bucket.fileStore.should.exist
       bucket.fileStore.should.be.an.instanceOf FileStore
       bucket.fileStore.dataPath.should.equal path.resolve(dataPath)
+    it 'should throw exception with no dataPath', () ->
+      # TODO: allow purely in memory option
+      (-> new Bucket).should.throw()
 
   describe 'create', () ->
     it 'should return an instance of Record', () ->
@@ -56,6 +59,15 @@ describe 'Bucket', () ->
 
       it 'should retrieve data from internal store', () ->
         record.should.have.property 'title', 'some more data'
+
+      describe 'record not in internal store', () ->
+        it 'should retrieve data from FileStore', (done) ->
+          key = uuid()
+          data = title: "Hello World"
+          bucket.fileStore.persist key, data, () ->
+            bucket.get key, (_data) ->
+              data.should.eql _data
+              done()
 
       it 'should return an instance of Record', () ->
         record.should.be.an.instanceOf Record

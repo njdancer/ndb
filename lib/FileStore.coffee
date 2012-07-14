@@ -15,3 +15,15 @@ module.exports = class FileStore
       if err
         throw err
       callback?()
+
+  retrieve: (key, callback) ->
+    fs.readFile path.join(@dataPath, key), 'utf8', (err, data) ->
+      if err
+        if err.errno is 34
+          # ENOENT
+          # File does not exist
+          callback null
+        else
+          throw err
+      else
+        callback JSON.parse(data)
