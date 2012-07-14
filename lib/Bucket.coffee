@@ -26,5 +26,6 @@ module.exports = class Bucket
         callback data
 
   delete: (key, callback) ->
-    @identityMap[key] = undefined
-    callback()
+    @fileStore.delete key, =>
+      @identityMap[key] = undefined
+      callback()

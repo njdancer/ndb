@@ -78,9 +78,20 @@ describe 'Bucket', () ->
           should.not.exist data
           done()
 
-  describe 'delete', () ->
-    it 'should remove data from internal store', (done) ->
-      bucket.identityMap[key = uuid()] = title: 'some more data'
-      bucket.delete key, () ->
-        should.not.exist bucket.identityMap[key]
+  describe 'delete', ->
+    before (done) ->
+      @record = bucket.create()
+
+      @record.key = uuid()
+      @record.title = 'some more data'
+
+      @record.save =>
+        bucket.delete @record.key, done
+
+    it 'should remove data from internal store', ->
+      should.not.exist bucket.identityMap[@record.key]
+
+    it 'should remove data from FileStore', (done) ->
+      bucket.fileStore.retrieve @record.key, (data) ->
+        should.not.exist data
         done()

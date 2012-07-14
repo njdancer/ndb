@@ -58,3 +58,12 @@ describe 'FileStore', () ->
 
       it 'should not throw an exception', () ->
         (=> fileStore.retrieve @key, (data) ->).should.not.throw()
+
+  describe 'delete', ->
+    it 'should remove file corresponding to key', ->
+      key = uuid()
+      data = title: "Hello World"
+      fileStore.persist key, data, ->
+        fileStore.delete key, ->
+          fileStore.retrieve key, (data) ->
+            should.not.exist data

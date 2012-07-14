@@ -27,3 +27,8 @@ module.exports = class FileStore
           throw err
       else
         callback JSON.parse(data)
+
+  delete: (key, callback) ->
+    fs.unlink path.join(@dataPath, key), (err) ->
+      if err then throw err
+      callback()
