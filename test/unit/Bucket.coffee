@@ -8,48 +8,48 @@ should = require 'should'
 sinon = require 'sinon'
 
 
-describe 'Bucket', () ->
+describe 'Bucket', ->
   bucket = null
   dataPath = 'tmp/data/bucket'
-  before () ->
+  before ->
     bucket = new Bucket dataPath
 
-  describe 'instantiation', () ->
-    it 'should return an instance of Bucket', () ->
+  describe 'instantiation', ->
+    it 'should return an instance of Bucket', ->
       bucket.should.be.an.instanceOf Bucket
-    it 'should create a FileStore', () ->
+    it 'should create a FileStore', ->
       bucket.fileStore.should.exist
       bucket.fileStore.should.be.an.instanceOf FileStore
       bucket.fileStore.dataPath.should.equal path.resolve(dataPath)
-    it 'should throw exception with no dataPath', () ->
+    it 'should throw exception with no dataPath', ->
       # TODO: allow purely in memory option
       (-> new Bucket).should.throw()
 
-  describe 'create', () ->
-    it 'should return an instance of Record', () ->
+  describe 'create', ->
+    it 'should return an instance of Record', ->
       record = bucket.create()
       record.should.be.an.instanceOf Record
-      it 'should have a reference to its bucket', () ->
+      it 'should have a reference to its bucket', ->
         record._bucket.should.equal bucket
 
-  describe 'update', () ->
+  describe 'update', ->
     key = null
     before (done) ->
       key = uuid()
       sinon.spy bucket.fileStore, 'persist'
       bucket.update key, title: 'data', done
 
-    it 'should persist data to internal store', () ->
+    it 'should persist data to internal store', ->
       bucket.identityMap[key].should.have.property 'title', 'data'
       
-    it 'should persist data to FileStore', () ->
+    it 'should persist data to FileStore', ->
       bucket.fileStore.persist.called.should.be.true
 
-    after () ->
+    after ->
       bucket.fileStore.persist.restore()
 
-  describe 'get', () ->
-    describe 'key exists', () ->
+  describe 'get', ->
+    describe 'key exists', ->
       record = null
       before (done) ->
         bucket.identityMap[key = uuid()] = title: 'some more data'
@@ -57,10 +57,10 @@ describe 'Bucket', () ->
           record = data;
           done()
 
-      it 'should retrieve data from internal store', () ->
+      it 'should retrieve data from internal store', ->
         record.should.have.property 'title', 'some more data'
 
-      describe 'record not in internal store', () ->
+      describe 'record not in internal store', ->
         before (done) ->
           @key = uuid()
           @data = title: "Hello World"
@@ -69,16 +69,16 @@ describe 'Bucket', () ->
               @record = record
               done()
 
-        it 'should retrieve data from FileStore', () ->
+        it 'should retrieve data from FileStore', ->
           @record.should.eql @data
 
-        it 'should return an instance of Record', () ->
+        it 'should return an instance of Record', ->
           @record.should.be.an.instanceOf Record
 
-      it 'should return an instance of Record', () ->
+      it 'should return an instance of Record', ->
         record.should.be.an.instanceOf Record
 
-    describe 'key does not exist', () ->
+    describe 'key does not exist', ->
       # TODO: change this to undefined
       it 'should receive null passed to its callback', (done) ->
         bucket.get uuid(), (data) ->

@@ -1,7 +1,7 @@
 Bucket = require '../../lib/Bucket'
 should = require 'should'
 
-module.exports = bucketSteps = () ->
+module.exports = bucketSteps = ->
   @Given /^a bucket exists$/, (callback) ->
     @bucket = new Bucket 'tmp/data/bucket'
     callback()

@@ -7,7 +7,7 @@ module.exports = class Bucket
     @identityMap = {}
     @fileStore = new FileStore dataPath
 
-  create: () ->
+  create: ->
     new Record bucket: this
 
   update: (key, data, callback) ->

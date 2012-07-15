@@ -1,4 +1,4 @@
-module.exports = recordSteps = () ->
+module.exports = recordSteps = ->
   @When /^I create a record with data$/, (callback) ->
     @record = @bucket.create()
 
