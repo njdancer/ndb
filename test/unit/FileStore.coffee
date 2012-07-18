@@ -56,8 +56,9 @@ describe 'FileStore', ->
           should.strictEqual data, null
           done()
 
-      it 'should not throw an exception', ->
-        (=> fileStore.retrieve @key, (data) ->).should.not.throw()
+      it 'should not throw an exception', (done) ->
+        (=> fileStore.retrieve @key, (data) ->
+          done()).should.not.throw()
 
   describe 'delete', ->
     it 'should remove file corresponding to key', ->
@@ -67,3 +68,10 @@ describe 'FileStore', ->
         fileStore.delete key, ->
           fileStore.retrieve key, (data) ->
             should.not.exist data
+
+    it 'should not throw an exception without a callback', (done) ->
+      key = uuid()
+      data = title: "Hello World"
+      (-> fileStore.persist key, data, ->
+          fileStore.delete key
+          done()).should.not.throw()

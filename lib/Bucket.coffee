@@ -11,6 +11,7 @@ module.exports = class Bucket
     new Record bucket: this
 
   update: (key, data, callback) ->
+    # Don't wait for file write in favour of speed
     # fire this off asynchronously with no callback
     # This is currently assuming that write will not fail
     # TODO: pass in callback as form of exception handler
@@ -20,7 +21,8 @@ module.exports = class Bucket
 
   get: (key, callback) ->
     record = (data) =>
-      callback new Record bucket: this, key: key, data: @identityMap[key]
+      process.nextTick =>
+        callback new Record bucket: this, key: key, data: @identityMap[key]
     if @identityMap[key]
       record @identityMap[key]
     else
@@ -33,6 +35,8 @@ module.exports = class Bucket
 
 
   delete: (key, callback) ->
-    @fileStore.delete key, =>
-      @identityMap[key] = undefined
-      callback()
+    # Don't wait for file deletion in favour of speed
+    # TODO: pass in callback as form of exception handler
+    @fileStore.delete key
+    @identityMap[key] = undefined
+    process.nextTick callback

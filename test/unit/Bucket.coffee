@@ -50,9 +50,10 @@ describe 'Bucket', ->
     it 'should persist data to FileStore', ->
       @bucket.fileStore.persist.called.should.be.true
 
-    it 'should fire callback after current code has completed', ->
+    it 'should fire callback after current code has completed', (done) ->
       @bucket.update @key, title: 'data', ->
         should.exist test
+        done()
       test = true
 
     after ->
@@ -70,16 +71,27 @@ describe 'Bucket', ->
       it 'should retrieve data from internal store', ->
         @record.should.eql @data
 
+      it 'should fire callback after current code has completed', (done) ->
+        @bucket.get @key, ->
+          should.exist test
+          done()
+        test = true
+
       describe 'record not in internal store', ->
-        before (done) ->
+        # before (done) ->
+        # TODO: Work out best strategy for seperating logic between before hook
+        it 'should fire callback after current code has completed', (done) ->
           @key = uuid()
           @data = title: "Hello World"
           @bucket.fileStore.persist @key, @data, =>
             @bucket.get @key, (record) =>
               @record = record
+              should.exist test
               done()
+            test = true
 
         it 'should retrieve data from FileStore', ->
+          # TODO: stub check that filestore receives call
           @record.should.eql @data
 
         it 'should return an instance of Record', ->
@@ -109,3 +121,12 @@ describe 'Bucket', ->
       @bucket.fileStore.retrieve @record.key, (data) ->
         should.not.exist data
         done()
+
+    it 'should fire callback after current code has completed', (done) ->
+      @record = @bucket.create()
+      @record.title = 'some more data'
+      @record.save =>
+        @bucket.delete @record.key, ->
+          should.exist test
+          done()
+        test = true

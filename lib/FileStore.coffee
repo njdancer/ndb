@@ -31,4 +31,4 @@ module.exports = class FileStore
   delete: (key, callback) ->
     fs.unlink path.join(@dataPath, key), (err) ->
       if err then throw err
-      callback()
+      callback?()
