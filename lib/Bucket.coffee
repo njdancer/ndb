@@ -12,10 +12,11 @@ module.exports = class Bucket
 
   update: (key, data, callback) ->
     # fire this off asynchronously with no callback
+    # This is currently assuming that write will not fail
     # TODO: pass in callback as form of exception handler
     @fileStore.persist key, data
     @identityMap[key] = data
-    callback()
+    process.nextTick callback
 
   get: (key, callback) ->
     record = (data) =>

@@ -50,6 +50,11 @@ describe 'Bucket', ->
     it 'should persist data to FileStore', ->
       @bucket.fileStore.persist.called.should.be.true
 
+    it 'should fire callback after current code has completed', ->
+      @bucket.update @key, title: 'data', ->
+        should.exist test
+      test = true
+
     after ->
       @bucket.fileStore.persist.restore()
 
