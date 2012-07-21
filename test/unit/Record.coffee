@@ -1,6 +1,7 @@
 Record = require '../../lib/Record'
 uuid = require('node-uuid').v4
 sinon = require 'sinon'
+should = require 'should'
 
 bucket = null
 record = null
@@ -9,9 +10,10 @@ describe 'Record', ->
   before ->
     bucket = 
       update: sinon.stub()
-      delete: sinon.spy()
+      delete: sinon.stub()
 
-    bucket.update.callsArg 2
+    bucket.update.callsArgAsync 2
+    bucket.delete.callsArgAsync 1
 
     record = new Record bucket: bucket
 
@@ -45,7 +47,25 @@ describe 'Record', ->
         bucket.update.calledOnce.should.equal true
         done()
 
+    it 'should fire callback after current code has completed', (done) ->
+      record = new Record bucket: bucket
+      record.title = "Hello World!"
+      record.save ->
+        should.exist test
+        done()
+      test = true
+
   describe 'remove', ->
-    it 'should remove record from bucket', ->
+    it 'should remove record from bucket', (done) ->
       record.remove ->
         bucket.delete.calledOnce.should.equal true
+        done()
+
+    it 'should fire callback after current code has completed', (done) ->
+      record = new Record bucket: bucket
+      record.title = "Hello World!"
+      record.save ->
+        record.remove ->
+          should.exist test
+          done()
+        test = true
