@@ -37,6 +37,12 @@ describe 'FileStore', ->
       file = JSON.parse fs.readFileSync(path.join(fileStore.dataPath, key), 'utf8')
       data.should.eql file
 
+    it 'should fire callback after current code has completed', (done) ->
+      fileStore.persist key, data, ->
+        should.exist test
+        done()
+      test = true
+
   describe 'retrieve', ->
     describe 'key exists', ->
       it 'should retrieve data off file', (done) ->
@@ -46,6 +52,15 @@ describe 'FileStore', ->
           fileStore.retrieve key, (_data) ->
             _data.should.eql data
             done()
+
+      it 'should fire callback after current code has completed', (done) ->
+        key = uuid()
+        data = title: "Hello World"
+        fileStore.persist key, data, ->
+          fileStore.retrieve key, ->
+            should.exist test
+            done()
+          test = true
 
     describe 'key does not exist', ->
       before ->
@@ -59,6 +74,12 @@ describe 'FileStore', ->
       it 'should not throw an exception', (done) ->
         (=> fileStore.retrieve @key, (data) ->
           done()).should.not.throw()
+
+      it 'should fire callback after current code has completed', (done) ->
+        fileStore.retrieve uuid(), ->
+          should.exist test
+          done()
+        test = true
 
   describe 'delete', ->
     it 'should remove file corresponding to key', ->
@@ -75,3 +96,14 @@ describe 'FileStore', ->
       (-> fileStore.persist key, data, ->
           fileStore.delete key
           done()).should.not.throw()
+
+    it 'should fire callback after current code has completed', (done) ->
+      key = uuid()
+      data = title: "Hello World"
+      fileStore.persist key, data, ->
+        fileStore.delete key, ->
+          should.exist test
+          done()
+        test = true
+
+    # when record does not exist it should not throw exception
